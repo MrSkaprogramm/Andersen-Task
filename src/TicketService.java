@@ -2,6 +2,8 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -9,6 +11,7 @@ public class TicketService {
     private static final float MAX_NORMAL_BACKPACK_WEIGTH = 30.0F;
     private static final BigDecimal PROMO = new BigDecimal("0.50");
     static Scanner scanner = new Scanner(System.in);
+    private List<Ticket> ticketList = new ArrayList<>();
 
 
     public static void main(String[] args) {
@@ -25,8 +28,13 @@ public class TicketService {
             System.out.println("Ticket creation time: " + fullTicketTime);
             BigDecimal fullTicketPrice = ticketService.calculateTicketPrice(fullTicket);
             System.out.println("Total ticket price: " + fullTicketPrice);
+            ticketService.saveTicketToList(fullTicket);
 
         }
+        Ticket ticketById = ticketService.findTicketById("wrim");
+
+
+        System.out.println("Your ticket: " + ticketById.toString());
 
     }
 
@@ -82,6 +90,19 @@ public class TicketService {
         float randomNumber = random.nextFloat(MAX_NORMAL_BACKPACK_WEIGTH);
         randomNumber = Math.round(randomNumber * 1000.0f) / 1000.0f;
         return randomNumber;
+    }
+
+    public void saveTicketToList(Ticket fullTicket){
+        ticketList.add(fullTicket);
+    }
+
+    public Ticket findTicketById(String ticketId) {
+        for (Ticket ticket : ticketList) {
+            if (ticket.getID().equals(ticketId)) {
+                return ticket;
+            }
+        }
+        return null;
     }
 
     public BigDecimal calculateTicketPrice(Ticket fullTicket){

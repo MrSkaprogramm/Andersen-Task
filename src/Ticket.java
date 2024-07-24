@@ -85,4 +85,16 @@ public class Ticket {
     public void setMaxAllowedBackpackWeight(float maxAllowedBackpackWeight) {
         this.maxAllowedBackpackWeight = maxAllowedBackpackWeight;
     }
+
+    @Override
+    public String toString() {
+        return "Ticket " +
+                "ID=" + ID  +
+                "\n concertHall=" + concertHall +
+                "\n eventCode=" + eventCode +
+                "\n time=" + time +
+                "\n isPromo=" + isPromo +
+                "\n stadiumSector=" + stadiumSector +
+                "\n maxAllowedBackpackWeight=" + maxAllowedBackpackWeight;
+    }
 }

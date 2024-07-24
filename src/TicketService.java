@@ -32,10 +32,18 @@ public class TicketService {
 
         }
         Ticket ticketById = ticketService.findTicketById("wrim");
-
-
-        System.out.println("Your ticket: " + ticketById.toString());
-
+        if(ticketById==null) System.out.println("There are no tickets with this ID");
+        else System.out.println("Your ticket: " + ticketById.toString());
+        List<Ticket> tickets=ticketService.findTicketByStadiumSector(StadiumSector.A);
+        if(tickets.isEmpty()){
+            System.out.println("There are no tickets with this stadium sector");
+        }
+        else{
+            System.out.println("Your tickets with the stadium sector A:");
+            for (Ticket ticket : tickets) {
+                System.out.println(ticket.toString());
+            }
+        }
     }
 
     public Ticket createEmptyTicket(){
@@ -105,6 +113,15 @@ public class TicketService {
         return null;
     }
 
+    public List<Ticket> findTicketByStadiumSector(StadiumSector stadiumSector) {
+        List<Ticket> tickets=new ArrayList<>();
+        for (Ticket ticket : ticketList) {
+            if (ticket.getStadiumSector().equals(stadiumSector)) {
+                tickets.add(ticket);
+            }
+        }
+        return tickets;
+    }
     public BigDecimal calculateTicketPrice(Ticket fullTicket){
         boolean isPromo = fullTicket.isPromo();
         StadiumSector ticketSector = fullTicket.getStadiumSector();

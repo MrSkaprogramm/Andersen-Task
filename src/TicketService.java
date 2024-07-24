@@ -13,6 +13,7 @@ public class TicketService {
     static Scanner scanner = new Scanner(System.in);
     private List<Ticket> ticketList = new ArrayList<>();
 
+
     public static void main(String[] args) {
         TicketService ticketService = new TicketService();
         Ticket emptyTicket = ticketService.createEmptyTicket();
@@ -28,10 +29,21 @@ public class TicketService {
             BigDecimal fullTicketPrice = ticketService.calculateTicketPrice(fullTicket);
             System.out.println("Total ticket price: " + fullTicketPrice);
             ticketService.saveTicketToList(fullTicket);
-        }
 
+        }
         Ticket ticketById = ticketService.findTicketById("wrim");
-        System.out.println("Your ticket: " + ticketById.toString());
+        if(ticketById==null) System.out.println("There are no tickets with this ID");
+        else System.out.println("Your ticket: " + ticketById.toString());
+        List<Ticket> tickets=ticketService.findTicketByStadiumSector(StadiumSector.A);
+        if(tickets.isEmpty()){
+            System.out.println("There are no tickets with this stadium sector");
+        }
+        else{
+            System.out.println("Your tickets with the stadium sector A:");
+            for (Ticket ticket : tickets) {
+                System.out.println(ticket.toString());
+            }
+        }
     }
 
     public Ticket createEmptyTicket(){
@@ -77,6 +89,17 @@ public class TicketService {
         return time;
     }
 
+    public ZonedDateTime saveTicketCreationTime(Ticket ticket){
+        Instant instant = Instant.ofEpochSecond(ticket.getTime());
+        return instant.atZone(ZoneId.of("UTC"));
+    }
+
+    public float generateRandomWeight(Random random) {
+        float randomNumber = random.nextFloat(MAX_NORMAL_BACKPACK_WEIGTH);
+        randomNumber = Math.round(randomNumber * 1000.0f) / 1000.0f;
+        return randomNumber;
+    }
+
     public void saveTicketToList(Ticket fullTicket){
         ticketList.add(fullTicket);
     }
@@ -90,17 +113,15 @@ public class TicketService {
         return null;
     }
 
-    public ZonedDateTime saveTicketCreationTime(Ticket ticket){
-        Instant instant = Instant.ofEpochSecond(ticket.getTime());
-        return instant.atZone(ZoneId.of("UTC"));
+    public List<Ticket> findTicketByStadiumSector(StadiumSector stadiumSector) {
+        List<Ticket> tickets=new ArrayList<>();
+        for (Ticket ticket : ticketList) {
+            if (ticket.getStadiumSector().equals(stadiumSector)) {
+                tickets.add(ticket);
+            }
+        }
+        return tickets;
     }
-
-    public float generateRandomWeight(Random random) {
-        float randomNumber = random.nextFloat(MAX_NORMAL_BACKPACK_WEIGTH);
-        randomNumber = Math.round(randomNumber * 1000.0f) / 1000.0f;
-        return randomNumber;
-    }
-
     public BigDecimal calculateTicketPrice(Ticket fullTicket){
         boolean isPromo = fullTicket.isPromo();
         StadiumSector ticketSector = fullTicket.getStadiumSector();

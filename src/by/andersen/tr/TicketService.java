@@ -198,11 +198,9 @@ public class TicketService extends IDUtil implements ClassUtil {
     public void getClientTicket(Client client, short eventCode) {
         if (client.getTicket(eventCode, ticketList) != null) {
             System.out.println("Ticket found");
+        } else {
+            System.out.println("Ticket not found");
         }
-    }
-
-    private boolean isEmailValid(String email) {
-        return email != null && email.matches(EMAIL_PATTERN);
     }
 
     public void shareTicket(Ticket ticket) {

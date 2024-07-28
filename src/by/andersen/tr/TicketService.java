@@ -14,7 +14,9 @@ public class TicketService extends IDUtil implements ClassUtil {
     private static final float MAX_NORMAL_BACKPACK_WEIGTH = 30.0F;
     private static final int MAX_CONCERT_HALL_NAME_LENGTH = 10;
     private static final short EVENT_CODE_MAX_NUMBER = 999;
-    private static final String STADIUM_SECTOR_REGEXP = "0.50";
+    private static final String STADIUM_SECTOR_PATTERN = "[A-C]";
+    private static final String PHONE_PATTERN = "^\\+?\\d{1,15}$";
+    private static final String EMAIL_PATTERN = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
     private static final BigDecimal PROMO = new BigDecimal("0.50");
     private static List<Ticket> ticketList = new ArrayList<>();
     static Scanner scanner = new Scanner(System.in);
@@ -96,7 +98,6 @@ public class TicketService extends IDUtil implements ClassUtil {
 
     private String readConcertHallName(){
         System.out.println("Enter concert hall name:");
-
         for(int i = 0; i < 2; i++) {
             String concertHall = scanner.nextLine();
             if (concertHall.length() <= MAX_CONCERT_HALL_NAME_LENGTH) {
@@ -126,7 +127,7 @@ public class TicketService extends IDUtil implements ClassUtil {
         for(int i = 0; i < 2; i++) {
             System.out.println("Enter stadium sector:");
             String stadiumSectorString = scanner.nextLine().toUpperCase();
-            if (stadiumSectorString.matches("[A-C]")) {
+            if (stadiumSectorString.matches(STADIUM_SECTOR_PATTERN)) {
                 StadiumSector stadiumSector = StadiumSector.valueOf(stadiumSectorString);
                 return stadiumSector;
             } else {
@@ -200,15 +201,42 @@ public class TicketService extends IDUtil implements ClassUtil {
         }
     }
 
+    private boolean isEmailValid(String email) {
+        return email != null && email.matches(EMAIL_PATTERN);
+    }
+
     public void shareTicket(Ticket ticket) {
-         System.out.println("Enter phone:");
-         String phone = scanner.nextLine();
-
+         String phone = readPhoneNum();
          ticket.shared(phone);
-         System.out.println("Enter email:");
-         String email = scanner.nextLine();
 
+         String  email = readEmail();
          ticket.shared(phone, email);
+    }
+
+    private String readPhoneNum() {
+        System.out.println("Enter phone:");
+        for(int i = 0; i < 2; i++) {
+            String phone = scanner.nextLine();
+            if (phone.matches(PHONE_PATTERN)) {
+                return phone;
+            } else {
+                System.out.println("Wrong phone!");
+            }
+        }
+        throw new IllegalArgumentException("Wrong phone!");
+    }
+
+    private String readEmail() {
+        System.out.println("Enter email:");
+        for(int i = 0; i < 2; i++) {
+            String email = scanner.nextLine();
+            if (email.matches(EMAIL_PATTERN)) {
+                return email;
+            } else {
+                System.out.println("Wrong email!");
+            }
+        }
+        throw new IllegalArgumentException("Wrong email!");
     }
 
     public <T extends ClassUtil> void printClassContent(T instance) {

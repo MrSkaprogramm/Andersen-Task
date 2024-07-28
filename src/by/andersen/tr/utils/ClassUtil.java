@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 public interface ClassUtil {
 
         default void print() {
-            System.out.println("Поля:");
+            System.out.println("Fields:");
             try {
                 Field idField = getClass().getSuperclass().getDeclaredField("ID");
                 idField.setAccessible(true);
@@ -20,12 +20,12 @@ public interface ClassUtil {
                 System.out.println("- " + field.getType().getSimpleName() + " " + field.getName());
             }
 
-            System.out.println("\nМетоды:");
+            System.out.println("\nMethods:");
             for (Method method : getClass().getDeclaredMethods()) {
                 System.out.println("- " + method.getReturnType().getSimpleName() + " " + method.getName());
             }
 
-            System.out.println("\nКонструкторы:");
+            System.out.println("\nConstructors:");
             for (Constructor<?> constructor : getClass().getDeclaredConstructors()) {
                 System.out.print("- ");
                 Class<?>[] paramTypes = constructor.getParameterTypes();
@@ -47,14 +47,13 @@ public interface ClassUtil {
             idField = IDUtil.class.getDeclaredField("ID");
             idField.setAccessible(true);
             long id = (long) idField.get(this);
-            System.out.println("ID: " + id);
 
             Field[] updatedFields = new Field[fields.length + 1];
             System.arraycopy(fields, 0, updatedFields, 0, fields.length);
             updatedFields[fields.length] = idField;
             fields = updatedFields;
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException("Ошибка доступа к полю ID", e);
+            throw new RuntimeException("Error accessing ID field", e);
         }
 
         for (Field field : fields) {
@@ -72,7 +71,7 @@ public interface ClassUtil {
                         System.out.println(message);
                     }
                 } catch (IllegalAccessException e) {
-                    throw new RuntimeException("Ошибка доступа к полю: " + field.getName(), e);
+                    throw new RuntimeException("Field access error: " + field.getName(), e);
                 }
             }
         }

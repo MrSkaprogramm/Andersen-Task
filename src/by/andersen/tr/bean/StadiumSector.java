@@ -1,3 +1,5 @@
+package by.andersen.tr.bean;
+
 import java.math.BigDecimal;
 
 public enum StadiumSector {
@@ -13,9 +15,5 @@ public enum StadiumSector {
 
     public BigDecimal getPrice() {
         return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
     }
 }
